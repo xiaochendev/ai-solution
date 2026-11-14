@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flashcards</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="storage.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Flashcards</h1>
+      <button type="button" data-modal-trigger="new-deck-dialog">New Deck</button>
+    </header>
+
+    <div class="app-layout">
+      <aside aria-label="Decks">
+        <h2>Decks</h2>
+        <nav aria-label="Flashcard decks">
+          <ul id="deck-list"></ul>
+          <div id="deck-empty-state" class="empty-state empty-state-compact" hidden>
+            <svg class="empty-state-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+              <path d="M8 13.5 24 6l16 7.5-16 7-16-7Zm0 8L24 29l16-7.5M8 29l16 7.5L40 29" />
+            </svg>
+            <h3>No decks yet</h3>
+            <p id="deck-empty-instructions" role="status" aria-live="polite">Create a deck to organize your flashcards.</p>
+            <button type="button" data-empty-action="new-deck">Create a deck</button>
+          </div>
+        </nav>
+      </aside>
+
+      <main>
+        <section aria-labelledby="deck-title">
+          <h2 id="deck-title">Sample deck</h2>
+          <div class="card-toolbar">
+            <label for="card-search">Search cards</label>
+            <input id="card-search" type="search">
+            <button type="button">Shuffle</button>
+            <button type="button" data-card-action="create">New Card</button>
+            <button id="study-mode-toggle" type="button" aria-pressed="false">Study</button>
+          </div>
+          <p id="study-mode-status" class="study-mode-status" role="status" hidden>
+            Study mode: Space flips; Left and Right arrows navigate; Escape exits.
+          </p>
+
+          <article id="study-card" class="card" aria-label="Flashcard" tabindex="0">
+            <div class="card-inner">
+              <div id="card-front-face" class="card-face card-front" aria-label="Front of card">
+                <span class="card-side-label">Front</span>
+                <p id="card-front-content">Card front</p>
+              </div>
+              <div id="card-back-face" class="card-face card-back" aria-label="Back of card" aria-hidden="true">
+                <span class="card-side-label">Back</span>
+                <p id="card-back-content">Card back</p>
+              </div>
+            </div>
+          </article>
+
+          <div id="card-empty-state" class="empty-state" hidden>
+            <svg id="empty-deck-icon" class="empty-state-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+              <path d="M8 13.5 24 6l16 7.5-16 7-16-7Zm0 8L24 29l16-7.5M8 29l16 7.5L40 29" />
+            </svg>
+            <svg id="empty-cards-icon" class="empty-state-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false" hidden>
+              <path d="M8 10.5A4.5 4.5 0 0 1 12.5 6H40v31H12.5A4.5 4.5 0 0 0 8 41.5v-31Zm0 0v31M15 14h18M15 20h18M15 26h12" />
+            </svg>
+            <svg id="empty-search-icon" class="empty-state-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false" hidden>
+              <circle cx="21" cy="21" r="12" />
+              <path d="m30 30 10 10M16 21h10M21 16v10" />
+            </svg>
+            <h3 id="card-empty-title">No cards yet</h3>
+            <p id="card-empty-instructions" role="status" aria-live="polite"></p>
+            <div class="empty-state-actions">
+              <button id="empty-create-card" type="button" data-card-action="create" hidden>Create a card</button>
+              <button id="empty-clear-search" type="button" data-empty-action="clear-search" hidden>Clear search</button>
+              <button id="empty-create-deck" type="button" data-empty-action="new-deck" hidden>Create a deck</button>
+            </div>
+          </div>
+
+          <p id="card-count" class="card-count" aria-live="polite">1 of 1</p>
+
+          <div class="card-controls" aria-label="Card controls">
+            <button type="button" data-card-action="previous">Previous</button>
+            <button type="button" data-card-action="flip" aria-pressed="false">Flip</button>
+            <button type="button" data-card-action="next">Next</button>
+          </div>
+
+          <div class="card-actions" aria-label="Current card actions">
+            <button id="edit-card-button" type="button" data-card-action="edit">Edit card</button>
+            <button id="delete-card-button" type="button" data-card-action="delete">Delete card</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <p id="app-status" role="status" aria-live="polite" hidden></p>
+      <p>Choose a deck and use the controls to study its cards.</p>
+    </footer>
+
+    <dialog id="new-deck-dialog" class="modal" aria-labelledby="new-deck-title" tabindex="-1">
+      <form id="deck-form" method="dialog" class="modal-content">
+        <h2 id="new-deck-title">New deck</h2>
+        <label for="deck-name">Deck name</label>
+        <input id="deck-name" name="deck-name" type="text" required autofocus>
+        <div class="modal-actions">
+          <button type="button" data-modal-close>Cancel</button>
+          <button id="deck-submit" type="submit" value="create">Create deck</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="new-card-dialog" class="modal" aria-labelledby="new-card-title" tabindex="-1">
+      <form id="card-form" method="dialog" class="modal-content">
+        <h2 id="new-card-title">New card</h2>
+        <label for="card-front">Front</label>
+        <textarea id="card-front" name="card-front" required autofocus></textarea>
+        <label for="card-back">Back</label>
+        <textarea id="card-back" name="card-back" required></textarea>
+        <div class="modal-actions">
+          <button type="button" data-modal-close>Cancel</button>
+          <button id="card-submit" type="submit" value="create">Create card</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="delete-item-dialog" class="modal" aria-labelledby="delete-item-title" tabindex="-1">
+      <form id="delete-item-form" method="dialog" class="modal-content">
+        <h2 id="delete-item-title">Delete item?</h2>
+        <p id="delete-item-message"></p>
+        <div class="modal-actions">
+          <button type="button" data-modal-close autofocus>Cancel</button>
+          <button id="delete-item-submit" type="submit" value="delete">Delete</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>

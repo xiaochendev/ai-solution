@@ -1,4 +1,11 @@
-#An AI Coding Challenge
+# An AI Coding Challenge
+
+## Flashcards web app (single-page, no build tools required).
+
+## Reflection (5 bullets): what AI produced, what you fixed, key insights.
+
+
+
 
 ## Scenario
 - You are tasked with building a browser-based Flashcards Study App in 2 hours. You know HTML/CSS/JS, but some features (modals, animations, keyboard accessibility, data persistence) may be time-consuming. You will leverage AI coding assistants (GitHub Copilot, Windsurf, Cursor) to move faster while actively reviewing and refining AI output. AI can be inconsistent, so you must understand and fix the code it generates.
